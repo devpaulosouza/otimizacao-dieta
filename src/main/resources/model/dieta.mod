@@ -1,18 +1,18 @@
-set NUTR;
-        set FOOD;
+set NUTRIENTE;
+set ALIMENTO;
 
-        param cost {FOOD} > 0;
-        param f_min {FOOD} >= 0;
-        param f_max {j in FOOD} >= f_min[j];
+param cost {ALIMENTO} > 0;
+param f_min {ALIMENTO} >= 0;
+param f_max {j in ALIMENTO} >= f_min[j];
 
-        param n_min {NUTR} >= 0;
-        param n_max {i in NUTR} >= n_min[i];
+param n_min {NUTRIENTE} >= 0;
+param n_max {i in NUTRIENTE} >= n_min[i];
 
-        param amt {NUTR,FOOD} >= 0;
+param amt {NUTRIENTE,ALIMENTO} >= 0;
 
-        var Buy {j in FOOD} >= f_min[j], <= f_max[j];
+var ListaCompra {j in ALIMENTO} >= f_min[j], <= f_max[j];
 
-        minimize Total_Cost:  sum {j in FOOD} cost[j] * Buy[j];
+minimize CustoTotal:  sum {j in ALIMENTO} cost[j] * ListaCompra[j];
 
-        subject to Diet {i in NUTR}:
-        n_min[i] <= sum {j in FOOD} amt[i,j] * Buy[j] <= n_max[i];
+subject to Diet {i in NUTRIENTE}:
+n_min[i] <= sum {j in ALIMENTO} amt[i,j] * ListaCompra[j] <= n_max[i];

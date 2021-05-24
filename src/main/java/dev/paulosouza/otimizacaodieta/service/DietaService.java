@@ -33,12 +33,12 @@ public class DietaService {
         ampl.read(modelUri);
 
         DataFrame dfAlimentos = this.getDataFrameAlimentos(dietaRequest);
-        ampl.setData(dfAlimentos, "FOOD");
+        ampl.setData(dfAlimentos, "ALIMENTO");
 
         DataFrame dataFrameNutrientes = this.getDataFrameNutrientes(dietaRequest);
-        ampl.setData(dataFrameNutrientes, "NUTR");
+        ampl.setData(dataFrameNutrientes, "NUTRIENTE");
 
-        DataFrame dfMatriz = new DataFrame(2, "NUTR", "FOOD", "amt");
+        DataFrame dfMatriz = new DataFrame(2, "NUTRIENTE", "ALIMENTO", "amt");
 
         dfMatriz.setMatrix(
                 dietaRequest.getQuantidades(),
@@ -51,12 +51,12 @@ public class DietaService {
 
     private DietaResponse extractResponse(AMPL ampl) {
         double[] listaDeCompras = ampl
-                .getVariable("Buy")
+                .getVariable("ListaCompra")
                 .getValues()
-                .getColumnAsDoubles("Buy.val");
+                .getColumnAsDoubles("ListaCompra.val");
 
         double custoTotal = ampl
-                .getObjective("Total_Cost")
+                .getObjective("CustoTotal")
                 .value();
 
         DietaResponse dietaResponse = new DietaResponse();
@@ -68,16 +68,16 @@ public class DietaService {
 
     private DataFrame getDataFrameNutrientes(DietaRequest dietaRequest) {
         DataFrame df;
-        df = new DataFrame(1, "NUTR");
-        df.setColumn("NUTR", dietaRequest.getNutrientes());
+        df = new DataFrame(1, "NUTRIENTE");
+        df.setColumn("NUTRIENTE", dietaRequest.getNutrientes());
         df.addColumn("n_min", dietaRequest.getMinimosNutriente());
         df.addColumn("n_max", dietaRequest.getMaximosNutriente());
         return df;
     }
 
     private DataFrame getDataFrameAlimentos(DietaRequest dietaRequest) {
-        DataFrame df = new DataFrame(1, "FOOD");
-        df.setColumn("FOOD", dietaRequest.getAlimentos());
+        DataFrame df = new DataFrame(1, "ALIMENTO");
+        df.setColumn("ALIMENTO", dietaRequest.getAlimentos());
         df.addColumn("cost", dietaRequest.getCustos());
         df.addColumn("f_min");
         df.addColumn("f_max");
